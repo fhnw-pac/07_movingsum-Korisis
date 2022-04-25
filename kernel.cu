@@ -61,7 +61,18 @@ inline void gpuAssert(cudaError_t code, const char* file, int line, bool abort =
 */
 __global__ void movingSumSharedMemStatic(int* vec, int* result_vec, int size)
 {
-    //ToDo
+    int globalIdx = threadIdx.x + blockIdx.x * blockDim.x;
+    __shared__ int sharedMem[BLOCKSIZE + 2 * RADIUS];
+
+    if (globalIdx >= RADIUS && globalIdx < size - RADIUS)
+    {
+        sharedMem[threadIdx.x] = vec[globalIdx - RADIUS];
+        if (threadIdx.x < 2*RADIUS)
+        {
+            sharedMem[BLOCKSIZE + threadIdx.x] = vec[globalIdx + ];
+        }
+    }
+    
 }
 
 
